@@ -1,0 +1,279 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ECG ARRHYTHMIA CLASSIFICATION</title>
+    <script src="https://kit.fontawesome.com/c98fe7b6bb.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Niconne&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet"> 
+	<style>
+	
+	.bg-primary {
+		background-color:#3498DB;
+	}
+	#result {
+		color: #0a1c4ed1;
+	}
+	.jumbotron {
+         background-image: url("https://heartrhythmcentral.com/wp-content/uploads/2018/01/ECG-abstract-backgrounds-with-human-3D-rendered-heart.jpg "); 
+         height: 650px;
+         background-size: 100% 100%;
+         filter: grayscale(10%);
+         color: #ffffff;
+         padding: 100px 50px;
+         border:100px 50px;
+         margin:0px 0px;
+    }
+  .text {
+  text-align: center;
+  position: absolute;
+  top: 20%;
+  left: 10%;
+  }
+  .navbar-brand{
+  color: #F0FFF0	;
+  }
+ 
+.img-preview {
+    width: 256px;
+    height: 256px;
+    position: absolute;
+    border: 5px solid #F8F8F8;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
+    margin-top: 1em;
+    margin-bottom: 1em;  
+
+}
+
+.img-preview>div {
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    
+}
+
+
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 1; 
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: auto;
+  background-color: rgb(0,0,0); 
+  background-color: rgba(0,0,0,0.4); 
+}
+
+
+.modal-content {
+  position: relative;
+  background-color: #fefefe;
+  margin: auto;
+  padding: 0;
+  border: 1px solid #888;
+  width: 80%;
+   height: 100%;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+  -webkit-animation-name: animatetop;
+  -webkit-animation-duration: 0.4s;
+  animation-name: animatetop;
+  animation-duration: 0.4s
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+  from {top:-300px; opacity:0} 
+  to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+  from {top:-300px; opacity:0}
+  to {top:0; opacity:1}
+}
+
+/* The Close Button */
+.close {
+  color: white;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-header {
+  padding: 2px 16px;
+  background-color: #5cb85c;
+  color: white;
+}
+
+.modal-body {padding: 2px 16px;}
+
+.modal-footer {
+  padding: 2px 16px;
+  background-color: #5cb85c;
+  color: white;
+}
+
+/* Add Animation */
+@-webkit-keyframes slideIn {
+  from {bottom: -300px; opacity: 0} 
+  to {bottom: 0; opacity: 1}
+}
+
+@keyframes slideIn {
+  from {bottom: -300px; opacity: 0}
+  to {bottom: 0; opacity: 1}
+}
+
+@-webkit-keyframes fadeIn {
+  from {opacity: 0} 
+  to {opacity: 1}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0} 
+  to {opacity: 1}
+}
+	</style>
+	
+	
+	</head>
+
+<body>
+
+    <div class="jumbotron text-center">
+   <nav class="navbar fixed-top navbar">
+  <a class="navbar-brand" href="#" style="font-family: 'Libre Caslon Display', serif;"><i class="fas fa-heartbeat"></i>ECG Arrhythmia Classification Using CNN</a>
+  <form class="form-inline">
+   <a class="navbar-brand" href="#">Team-28</a> 
+  </form>
+    </nav>
+      <div class="text">
+    <h1>ECG Arrhythmia Classification</h1>
+    <p style="font-family: 'Dancing Script', cursive;">Detecting the heart rhythms using ECG</p>
+    
+
+<button type="button" class="btn btn-outline-warning"  id="myBtn">Click Here to Upload an Image</button>
+
+<div id="myModal" class="modal">
+
+ 
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close">&times;</span>
+      <h2>choose a picture</h2>
+    </div>
+    <div class="modal-body">
+    <div>
+					<h4>Please uploand an animal image</h4>
+			<form action = "http://localhost:5000/predict" id="upload-file" method="post" enctype="multipart/form-data">
+				<label for="imageUpload" class="upload-label">
+					Choose...
+				</label>
+				<input type="file" name="image" id="imageUpload" accept=".png, .jpg, .jpeg" width="304" height="228">
+			</form>
+			
+
+			<div class="image-section" style="display:none;">
+				<div class="img-preview">
+					<div id="imagePreview">
+					</div>
+				</div>
+				
+				<div>
+					<button type="button" class="btn btn-info btn-lg " id="btn-predict">Click on this to see the prediction!</button>
+				</div>
+			</div>
+
+			<div class="loader" style="display:none;"></div>
+
+			<h3>
+				<span id="result" style="float:right"> </span>
+			</h3>
+
+		</div>
+			</div>
+
+    <div class="modal-footer">
+      <h3>...</h3>
+    </div>
+  </div>
+</div>
+</div>
+
+       
+   </div>
+        <div class="container">
+        
+        <div id="content" style="margin-top:2em">
+		
+		  <div class="row">
+			<div class="col-sm-6 bd" >
+			  <h3>DETECTING THE HEART RHYTHM USING ECG </h3>
+			  <br>
+			  <p style="font-family: 'Niconne', cursive;">In this study, the electrocardiography (ECG) arrhythmias have been classified by the proposed framework depend on deep neural networks in order to features information. The proposed approaches operates with a large volume of raw ECG time-series data and ECG signal spectrograms as inputs to a deep convolutional neural networks (CNN). Heartbeats are classified as normal (N), premature ventricular contractions (PVC), right bundle branch block (RBBB) rhythm by using ECG signals obtained from MIT-BIH arrhythmia database. The first approach is to directly use ECG time-series signals as input to CNN, and in the second approach ECG signals are converted into time-frequency domain matrices and sent to CNN. The most appropriate parameters such as number of the layers, size and number of the filters are optimized heuristically for fast and efficient operation of the CNN algorithm. The proposed system demonstrated high classification rate for the time-series data and spectrograms by using deep learning algorithms without standard feature extraction methods. Performance evaluation is based on the average sensitivity, specificity and accuracy values. It is also worth to note that spectrogram increases the performance of classification since it extracts the useful time-frequency information of the signal</p>
+			 
+			 
+			 
+			</div>
+			
+			<div class="col-sm-6">
+              <img src="https://www.carolinaheartandleg.com/wp-content/uploads/2018/04/ARRHYTMIA-2.jpg" style="width:800px" class="img-thumbnail" alt="">				     
+			</div>
+			 
+		  </div>
+		</div>
+		
+    </div>
+   <script>
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal 
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+</script>
+<footer>
+    <script src="{{ url_for('static', filename='js/main.js') }}" type="text/javascript"></script>    
+</footer>
+</body>
+
+</html>
